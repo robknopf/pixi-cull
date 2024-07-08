@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
 import random from 'yy-random'
 import forkMe from 'fork-me-github'
-import FPS from 'yy-fps'
+import { FPS } from 'yy-fps'
 
 import { Simple, SpatialHash, SpatialHashStats } from '../dist/pixi-cull.es.js'
 
@@ -73,27 +73,35 @@ function ui() {
 
 function pixi() {
     const view = el('.pixi') as HTMLCanvasElement
-    application = new PIXI.Application({
+    application = new PIXI.Application();
+    application.init({
         width: view.offsetWidth,
         height: view.offsetHeight,
         view,
         backgroundAlpha: 0
-    })
-    viewport = application.stage.addChild(new Viewport())
-    viewport.drag().pinch().decelerate().wheel()
-    viewport.resize(view.offsetWidth, view.offsetHeight, WIDTH, HEIGHT)
-    viewport.fitWidth(5000)
-    const ticker = PIXI.Ticker
-    ticker.shared.add(update)
-    // _test = _viewport.addChild(new PIXI.Graphics())
+    }).then(() => {
+        viewport = application.stage.addChild(new Viewport({
+            screenWidth: view.offsetWidth,
+            screenHeight: view.offsetHeight,
+            worldWidth: WIDTH,
+            worldHeight: HEIGHT,
+            events: this.renderer.events
+        }));
+        viewport.drag().pinch().decelerate().wheel()
+        viewport.resize(view.offsetWidth, view.offsetHeight, WIDTH, HEIGHT)
+        viewport.fitWidth(5000)
+        const ticker = PIXI.Ticker
+        ticker.shared.add(update)
+        // _test = _viewport.addChild(new PIXI.Graphics())
 
-    window.addEventListener('resize', () => {
-        // weird hack needed for flexbox to work correctly; probably a better way to do this
-        application.renderer.resize(0, 0)
+        window.addEventListener('resize', () => {
+            // weird hack needed for flexbox to work correctly; probably a better way to do this
+            application.renderer.resize(0, 0)
 
-        viewport.resize(view.offsetWidth, view.offsetHeight)
-        application.renderer.resize(view.offsetWidth, view.offsetHeight)
-        viewport.dirty = true
+            viewport.resize(view.offsetWidth, view.offsetHeight)
+            application.renderer.resize(view.offsetWidth, view.offsetHeight)
+            viewport.dirty = true
+        })
     })
 }
 
