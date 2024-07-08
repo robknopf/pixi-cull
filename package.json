@@ -48,7 +48,7 @@
         "fork-me-github": "^1.2.0",
         "jsdoc": "^4.0.3",
         "jsdoc-plugin-typescript": "^2.2.1",
-        "pixi-viewport": "^5.0.3",
+        "pixi-viewport": "https://github.com/robknopf/pixi-viewport.git",
         "pixi.js": "8.2.2",
         "rollup": "^4.18.0",
         "rollup-plugin-peer-deps-external": "^2.2.4",
